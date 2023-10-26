@@ -2,8 +2,9 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Comment, Friend, Post, Tag, User, WebSession } from "./app";
+import { Comment, Event, Friend, Post, Technique, User, WebSession } from "./app";
 import { CommentDoc } from "./concepts/comment";
+import { EventDoc } from "./concepts/event";
 import { PostDoc, PostOptions } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
@@ -190,38 +191,108 @@ class Routes {
 
   // TAG CONCEPT
 
-  @Router.get("/tags")
-  async getTags(author?: string) {
-    /**
-     * converts postId to poster's username and authorId to username for readability
-     */
+  @Router.get("/techniques")
+  async getTechniques(author?: string, root?: ObjectId, content?: string) {
     let tags;
     if (author) {
       const id = (await User.getUserByUsername(author))._id;
-      tags = await Tag.getByAuthor(id);
+      tags = await Technique.getByAuthor(id);
+    } else if (content) {
+      tags = await Technique.getTags({ content });
+    } else if (root) {
+      tags = await Technique.getByRoot(root);
     } else {
-      tags = await Tag.getTags({});
+      tags = await Technique.getTags({});
     }
     return tags;
   }
 
-  @Router.post("/tags")
-  async createTag(session: WebSessionDoc, content: string, root: ObjectId) {
-    const rootType: string = "Post";
+  @Router.post("/techniques")
+  async createTechniques(session: WebSessionDoc, content: string, root: ObjectId) {
     const user = WebSession.getUser(session);
-    const created = await Tag.create(user, content, root);
+    const created = await Technique.create(user, content, root);
 
     if (!created.tag) {
       throw Error("No tag created");
     }
     const tag_id = created.tag._id;
 
-    // also add to the options of the related post
-    if (rootType === "Post") {
-      await Post.addTagId(root, tag_id);
+    await Post.addTechniqueId(root, tag_id);
+    return { msg: created.msg, tag: created.tag };
+  }
+
+  // EVENT CONCEPT
+  @Router.get("/events")
+  async getEvents(organizer?: string) {
+    let events;
+    if (organizer) {
+      const id = (await User.getUserByUsername(organizer))._id;
+      events = await Event.getByOrganizer(id);
+    } else {
+      events = await Event.getEvents({});
     }
 
-    return { msg: created.msg, tag: created.tag };
+    return events;
+  }
+
+  @Router.get("/events/active")
+  async getActiveEvents(organizer?: string, user?: string) {
+    let events;
+    if (organizer) {
+      const id = (await User.getUserByUsername(organizer))._id;
+      events = await Event.getActiveByOrganizer(id);
+    } else if (user) {
+      const id = (await User.getUserByUsername(user))._id;
+      events = await Event.getActiveByUser(id);
+    } else {
+      events = await Event.getActiveEvents({});
+    }
+    return events;
+  }
+
+  @Router.post("/events")
+  async createEvent(session: WebSessionDoc, content: string, capacity: number, month: number, day: number, startHour: number, startMinute: number, endHour: number, endMinute: number) {
+    const organizer = WebSession.getUser(session);
+    const year = new Date().getFullYear();
+    const monthIndex = month - 1;
+
+    const start = new Date(year, monthIndex, day, startHour, startMinute);
+    const end = new Date(year, monthIndex, day, endHour, endMinute);
+    const event = await Event.create(organizer, content, capacity, start, end);
+    return event;
+  }
+
+  @Router.delete("/events/:_id")
+  async deleteEvent(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Event.isOrganizer(user, _id);
+    return Event.delete(_id);
+  }
+
+  @Router.patch("/events/register/:_id")
+  async registerForEvent(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Event.addRosterUserId(_id, user);
+  }
+
+  @Router.patch("/events/unregister/:_id")
+  async unregisterForEvent(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    return await Event.deleteRosterUserId(_id, user);
+  }
+
+  @Router.patch("/events/cancel/:_id")
+  async cancelEvent(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Event.isOrganizer(user, _id);
+    return Event.cancelEvent(_id);
+  }
+
+  @Router.patch("/events/:_id")
+  async updateEvent(session: WebSessionDoc, _id: ObjectId, update: Partial<EventDoc>) {
+    const user = WebSession.getUser(session);
+    await Event.isOrganizer(user, _id);
+    return Event.updateEvent(_id, update);
   }
 }
 
