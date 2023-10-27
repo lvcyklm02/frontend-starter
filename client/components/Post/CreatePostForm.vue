@@ -3,29 +3,49 @@ import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
+const techniques = ref("");
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string) => {
+const createPost = async (content: string, techniques: string) => {
+  let response;
   try {
-    await fetchy("api/posts", "POST", {
+    response = await fetchy("api/posts", "POST", {
       body: { content },
     });
   } catch (_) {
     return;
   }
+
+  const technique_list = techniques.split(" ");
+  technique_list.forEach((technique) => {
+    createTechnique(technique, response.post._id)
+  });
+
   emit("refreshPosts");
   emptyForm();
 };
 
+const createTechnique = async (technique: string, post_id: string) => {
+  try {
+    await fetchy(`api/techniques/${post_id}`, "POST", {
+      body: { technique },
+    });
+  } catch (_) {
+    return;
+  }
+}
+
 const emptyForm = () => {
   content.value = "";
+  techniques.value = "";
 };
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content)">
+  <form @submit.prevent="createPost(content, techniques)">
     <label for="content">Post Contents:</label>
     <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+    <textarea id="techniques" v-model="techniques" placeholder="Tag techniques (seperate by space)!"> </textarea>
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>
 </template>

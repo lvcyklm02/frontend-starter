@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CommentListComponent from "@/components/Comment/CommentListComponent.vue";
+import TechniqueListComponent from "@/components/Tag/TechniqueListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
@@ -36,6 +37,7 @@ const sendRefreshPost = async () => {
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
     </article>
   </div>
+  <TechniqueListComponent :post="post" />
   <CommentListComponent :post="post" />
 </template>
 

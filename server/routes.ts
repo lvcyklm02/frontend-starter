@@ -163,7 +163,6 @@ class Routes {
      */
 
     const comments = await Comment.getByRoot(_id);
-    console.log(comments);
 
     return Responses.comments(comments);
   }
@@ -216,7 +215,15 @@ class Routes {
     return tags;
   }
 
-  @Router.post("/techniques")
+  @Router.get("/techniques/:_id")
+  async getTechniqueByRoot(_id: ObjectId) {
+    let tags;
+    tags = await Technique.getByRoot(_id);
+    console.log("techniques:", tags)
+    return tags;
+  }
+
+  @Router.post("/techniques/:root")
   async createTechniques(session: WebSessionDoc, content: string, root: ObjectId) {
     const user = WebSession.getUser(session);
     const created = await Technique.create(user, content, root);
