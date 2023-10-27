@@ -1,7 +1,7 @@
 import { Filter, ObjectId } from "mongodb";
 
 import DocCollection, { BaseDoc } from "../framework/doc";
-import { NotAllowedError } from "./errors";
+import { NotAllowedError, NotFoundError } from "./errors";
 
 export interface TagDoc<T> extends BaseDoc {
   author: ObjectId; // used to check exclusive tag rights
@@ -48,6 +48,16 @@ export default class TagConcept<T> {
     return await this.getTags({ root: root });
   }
 
+  async isAuthor(user: ObjectId, _id: ObjectId) {
+    const tag = await this.tags.readOne({ _id });
+    if (!tag) {
+      throw new NotFoundError(`tag ${_id} does not exist!`);
+    }
+    if (tag.author.toString() !== user.toString()) {
+      throw new TagAuthorNotMatchError(user, _id);
+    }
+  }
+
   async delete(_id: ObjectId) {
     await this.tags.deleteOne({ _id });
     return { msg: "Tag deleted successfully!" };
@@ -60,5 +70,14 @@ export default class TagConcept<T> {
         throw new NotAllowedError(`Cannot update '${key}' field!`);
       }
     }
+  }
+}
+
+export class TagAuthorNotMatchError extends NotAllowedError {
+  constructor(
+    public readonly author: ObjectId,
+    public readonly _id: ObjectId,
+  ) {
+    super("{0} is not the author of Tag {1}!", author, _id);
   }
 }

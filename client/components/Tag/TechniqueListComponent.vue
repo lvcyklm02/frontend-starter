@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TechniqueComponent from "@/components/Tag/TechniqueComponent.vue";
+
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
@@ -35,7 +37,7 @@ onBeforeMount(async () => {
     <p>Techniques: </p>
     <section class="techniques" v-if="loaded && techniques.length !== 0">
         <article v-for="technique in techniques" :key="technique._id">
-            <TechniqueComponent v-if="editing !== technique._id" :technique="technique" @refreshtechniques="getTechniques"
+            <TechniqueComponent v-if="editing !== technique._id" :technique="technique" @refreshTechniques="getTechniques"
                 @editTechnique="updateEditing" />
             <!-- <EditTechniqueForm v-else :technique="technique" @refreshtechniques="getTechniques"
                 @editTechnique="updateEditing" /> -->
@@ -51,7 +53,7 @@ onBeforeMount(async () => {
 <style scoped>
 section {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 1em;
 }
 
@@ -59,7 +61,7 @@ article {
     background-color: var(--base-bg);
     border-radius: 1em;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 0.5em;
     padding: 1em;
 }

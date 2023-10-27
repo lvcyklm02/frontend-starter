@@ -18,17 +18,17 @@ const createPost = async (content: string, techniques: string) => {
 
   const technique_list = techniques.split(" ");
   technique_list.forEach((technique) => {
-    createTechnique(technique, response.post._id)
+    createTechnique(technique, response.post._id);
   });
 
   emit("refreshPosts");
   emptyForm();
 };
 
-const createTechnique = async (technique: string, post_id: string) => {
+const createTechnique = async (content: string, post_id: string) => {
   try {
     await fetchy(`api/techniques/${post_id}`, "POST", {
-      body: { technique },
+      body: { content },
     });
   } catch (_) {
     return;

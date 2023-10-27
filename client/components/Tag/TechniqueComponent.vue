@@ -22,30 +22,41 @@ const sendRefreshPost = async () => {
 </script>
 
 <template>
-    <div class="tag_button">
-        <p>{{ props.technique.content }}</p>
-        <button class="button-error btn-small pure-button" @click="deleteTechnique">X</button>
+    <div class="technique-label">
+        <span class="label-text">{{ props.technique.content }}</span>
+        <button class="delete-button" @click="deleteTechnique">X</button>
     </div>
 </template>
 
 <style scoped>
-p {
-    margin: 0em;
-}
-
-menu {
-    list-style-type: none;
+.technique-label {
     display: flex;
-    flex-direction: row;
-    gap: 1em;
-    padding: 0;
-    margin: 0;
-}
-
-.tag_button {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: azure;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    font-family: Arial, sans-serif;
+}
+
+.label-text {
+    flex: 1;
+    /* Allow the label text to grow and take up available space */
+    font-weight: bold;
+}
+
+.delete-button {
+    background-color: #ff3333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: #cc0000;
 }
 </style>

@@ -237,6 +237,14 @@ class Routes {
     return { msg: created.msg, tag: created.tag };
   }
 
+  @Router.delete("/techniques/:_id")
+  async deleteTechniqueByRoot(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Technique.isAuthor(user, _id);
+    await Technique.delete(_id);
+    return  { msg: "Successfully deleted technique"};
+  }
+
   // EVENT CONCEPT
   @Router.get("/events")
   async getEvents(organizer?: string) {
