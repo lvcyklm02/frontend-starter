@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { ObjectId } from "mongodb";
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
 const content = ref("");
 const props = defineProps(["post"]);
-const emit = defineEmits(["refreshPosts"]);
+const emit = defineEmits(["refreshComments"]);
 
-const createComment = async (content: string, root: ObjectId) => {
+const createComment = async (content: string) => {
+    const query = { content: content, _id: props.post._id };
     try {
-        await fetchy("api/comments", "POST", {
-            content: { content },
-            root: { root },
+        console.log('commenting new');
+        await fetchy(`api/comments/${props.post._id}`, "POST", {
+            query
         });
     } catch (_) {
         return;
     }
-    emit("refreshPosts");
+    emit("refreshComments");
     emptyForm();
 };
 
@@ -26,7 +26,7 @@ const emptyForm = () => {
 </script>
 
 <template>
-    <form @submit.prevent="createComment(content, props.post._id)">
+    <form @submit.prevent="createComment(content)">
         <label for="content">Add Comment:</label>
         <textarea id="content" v-model="content" placeholder="Write a Comment" required> </textarea>
         <button type="submit" class="pure-button-primary pure-button">Post Comment</button>

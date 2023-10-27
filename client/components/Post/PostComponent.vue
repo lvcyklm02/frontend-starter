@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CreateCommentForm from "@/components/Comment/CreateCommentForm.vue";
+import CommentListComponent from "@/components/Comment/CommentListComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
@@ -35,8 +35,8 @@ const sendRefreshPost = async () => {
       <p v-if="props.post.dateCreated !== props.post.dateUpdated">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
       <p v-else>Created on: {{ formatDate(props.post.dateCreated) }}</p>
     </article>
-    <CreateCommentForm :post="post" @refreshPosts="sendRefreshPost" />
   </div>
+  <CommentListComponent :post="post" />
 </template>
 
 <style scoped>

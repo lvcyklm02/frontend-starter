@@ -156,11 +156,22 @@ class Routes {
     return Responses.comments(comments);
   }
 
-  @Router.post("/comments")
-  async createComment(session: WebSessionDoc, content: string, root: ObjectId) {
-    const rootType: string = "Post";
+  @Router.get("/comments/:_id")
+  async getCommentsByPost(_id: ObjectId) {
+    /**
+     * converts postId to poster's username and authorId to username for readability
+     */
+
+    const comments = await Comment.getByRoot(_id);
+    console.log(comments);
+
+    return Responses.comments(comments);
+  }
+
+  @Router.post("/comments/:_id")
+  async createComment(session: WebSessionDoc, content: string, _id: ObjectId) {
     const user = WebSession.getUser(session);
-    const created = await Comment.create(user, content, root);
+    const created = await Comment.create(user, content, _id);
 
     if (!created.comment) {
       throw Error("No comment created");
@@ -168,9 +179,7 @@ class Routes {
     const comment_id = created.comment._id;
 
     // also add to the options of the related post
-    if (rootType === "Post") {
-      await Post.addCommentId(root, comment_id);
-    }
+    await Post.addCommentId(_id, comment_id);
 
     return { msg: created.msg, Comment: await Responses.comment(created.comment) };
   }

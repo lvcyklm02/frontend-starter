@@ -29,7 +29,7 @@ export default class CommentConcept {
   }
 
   async getByRoot(root: ObjectId) {
-    return await this.getComments({ root: root });
+    return await this.getComments({ root });
   }
 
   async update(_id: ObjectId, update: Partial<CommentDoc>) {
