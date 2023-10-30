@@ -23,40 +23,65 @@ onBeforeMount(async () => {
 
 <template>
   <header>
+    <div class="title">
+      <img src="@/assets/images/shoe.ico" />
+      <RouterLink :to="{ name: 'Home' }">
+        <h1>kah</h1>
+      </RouterLink>
+    </div>
+    <article v-if="toast !== null" class="toast" :class="toast.style">
+      <p>{{ toast.message }}</p>
+    </article>
+  </header>
+  <main>
+    <RouterView />
+  </main>
+  <footer>
     <nav>
-      <div class="title">
-        <img src="@/assets/images/logo.svg" />
-        <RouterLink :to="{ name: 'Home' }">
-          <h1>Social Media App</h1>
-        </RouterLink>
-      </div>
       <ul>
         <li>
           <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
         </li>
         <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings </RouterLink>
+          <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings
+          </RouterLink>
         </li>
         <li v-else>
           <RouterLink :to="{ name: 'Login' }" :class="{ underline: currentRouteName == 'Login' }"> Login </RouterLink>
         </li>
       </ul>
     </nav>
-    <article v-if="toast !== null" class="toast" :class="toast.style">
-      <p>{{ toast.message }}</p>
-    </article>
-  </header>
-  <RouterView />
+  </footer>
 </template>
 
 <style scoped>
 @import "./assets/toast.css";
 
-nav {
+header {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0;
   padding: 1em 2em;
   background-color: lightgray;
   display: flex;
   align-items: center;
+}
+
+footer {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  padding: 1em 2em;
+  background-color: lightgray;
+  display: flex;
+  align-items: center;
+}
+
+main {
+  margin-top: 100px;
+  margin-bottom: 100px;
 }
 
 h1 {
