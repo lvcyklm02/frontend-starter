@@ -66,6 +66,7 @@ onBeforeMount(async () => {
 @import "./assets/toast.css";
 
 header {
+  justify-content: center;
   overflow: hidden;
   position: fixed;
   width: 100%;
@@ -77,6 +78,7 @@ header {
 }
 
 footer {
+  justify-content: center;
   overflow: hidden;
   position: fixed;
   width: 100%;
@@ -119,7 +121,7 @@ ul {
   display: flex;
   align-items: center;
   flex-direction: row;
-  gap: 1em;
+  gap: 10em;
 }
 
 .underline {
