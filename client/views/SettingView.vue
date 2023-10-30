@@ -24,5 +24,6 @@ async function delete_() {
     <button class="pure-button pure-button-primary" @click="logout">Logout</button>
     <button class="button-error pure-button" @click="delete_">Delete User</button>
     <UpdateUserForm />
+    <RouterLink :to="{ name: 'Profile' }">Back</RouterLink>
   </main>
 </template>

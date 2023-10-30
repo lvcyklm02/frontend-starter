@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import PostListComponent from "@/components/Post/PostListComponent.vue";
+import PostProfileComponent from "@/components/Post/PostProfileComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
+import { RouterLink, useRoute } from "vue-router";
+
+const currentRoute = useRoute();
+const currentRouteName = computed(() => currentRoute.name);
 
 const { currentUsername } = storeToRefs(useUserStore());
+
 </script>
 
 <template>
@@ -16,7 +22,11 @@ const { currentUsername } = storeToRefs(useUserStore());
                 <div class="region">region</div>
                 <div class="days-on-kah">152 days on kah</div>
             </div>
-            <div class="profile-setting">Setting</div>
+            <div class="profile-setting">
+                <RouterLink :to="{ name: 'Settings' }">
+                    <p>settings</p>
+                </RouterLink>
+            </div>
         </div>
         <div>
             <ul class="account-stats">
@@ -26,7 +36,7 @@ const { currentUsername } = storeToRefs(useUserStore());
             </ul>
         </div>
 
-        <PostListComponent />
+        <PostProfileComponent />
     </main>
 </template>
 
@@ -45,9 +55,19 @@ section {
 .profile-header {
     /* margin-left: auto; */
     display: flex;
-    align-items: center;
+    align-items: top;
     flex-direction: row;
     justify-content: center;
+}
+
+.username {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.name {
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .account-stats {
@@ -66,6 +86,9 @@ img {
 
 .profile-header-content {
     width: 20em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
 }
 
 .profile-setting {

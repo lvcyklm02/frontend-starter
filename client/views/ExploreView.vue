@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PostListComponent from "@/components/Post/PostListComponent.vue";
+import PostExploreComponent from "@/components/Post/PostExploreComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 
@@ -13,7 +13,7 @@ const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
             <h1 v-if="isLoggedIn">Welcome {{ currentUsername }}!</h1>
             <h1 v-else>Log in to view</h1>
         </section>
-        <PostListComponent />
+        <PostExploreComponent />
     </main>
 </template>
 
