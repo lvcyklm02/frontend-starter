@@ -25,7 +25,7 @@ onBeforeMount(async () => {
   <header>
     <div class="title">
       <img src="@/assets/images/shoe.ico" />
-      <RouterLink :to="{ name: 'Home' }">
+      <RouterLink :to="{ name: 'Feed' }">
         <h1>kah</h1>
       </RouterLink>
     </div>
@@ -40,10 +40,18 @@ onBeforeMount(async () => {
     <nav>
       <ul>
         <li>
-          <RouterLink :to="{ name: 'Home' }" :class="{ underline: currentRouteName == 'Home' }"> Home </RouterLink>
+          <RouterLink :to="{ name: 'Feed' }" :class="{ underline: currentRouteName == 'Feed' }"> Feed </RouterLink>
         </li>
         <li v-if="isLoggedIn">
-          <RouterLink :to="{ name: 'Settings' }" :class="{ underline: currentRouteName == 'Settings' }"> Settings
+          <RouterLink :to="{ name: 'Explore' }" :class="{ underline: currentRouteName == 'Explore' }"> Explore
+          </RouterLink>
+        </li>
+        <li v-if="isLoggedIn">
+          <RouterLink :to="{ name: 'Upload' }" :class="{ underline: currentRouteName == 'Upload' }"> Upload
+          </RouterLink>
+        </li>
+        <li v-if="isLoggedIn">
+          <RouterLink :to="{ name: 'Profile' }" :class="{ underline: currentRouteName == 'Profile' }"> Profile
           </RouterLink>
         </li>
         <li v-else>
