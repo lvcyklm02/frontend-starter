@@ -7,19 +7,20 @@ const techniques = ref("");
 const emit = defineEmits(["refreshPosts"]);
 
 const createPost = async (content: string, techniques: string) => {
-  let response;
+
   try {
-    response = await fetchy("api/posts", "POST", {
+    const response = await fetchy("api/posts", "POST", {
       body: { content },
     });
+
+    const technique_list = techniques.split(" ");
+    technique_list.forEach((technique) => {
+      createTechnique(technique, response.post._id);
+    });
+
   } catch (_) {
     return;
   }
-
-  const technique_list = techniques.split(" ");
-  technique_list.forEach((technique) => {
-    createTechnique(technique, response.post._id);
-  });
 
   emit("refreshPosts");
   emptyForm();
