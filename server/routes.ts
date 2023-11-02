@@ -259,6 +259,12 @@ class Routes {
     return events;
   }
 
+  @Router.get("/events/register/:_id")
+  async isRegisteredQuery(session: WebSessionDoc, _id: ObjectId) {
+    const user_id = WebSession.getUser(session);
+    return Event.isRegisteredQuery(_id, user_id);
+  }
+
   @Router.get("/events/active")
   async getActiveEvents(organizer?: string, user?: string) {
     let events;

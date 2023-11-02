@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import EventScheduleComponent from "@/components/Event/EventScheduleComponent.vue";
+
 import PostProfileComponent from "@/components/Post/PostProfileComponent.vue";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
@@ -35,7 +37,7 @@ const { currentUsername } = storeToRefs(useUserStore());
                 <li>59 Watching</li>
             </ul>
         </div>
-
+        <EventScheduleComponent />
         <PostProfileComponent />
     </main>
 </template>

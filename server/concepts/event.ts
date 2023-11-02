@@ -115,6 +115,14 @@ export default class EventConcept {
     }
   }
 
+  async isRegisteredQuery(_id: ObjectId, user_id: ObjectId) {
+    const event = await this.getEventById(_id);
+    if (!(user_id.toString() in event.roster)) {
+      return false;
+    }
+    return true;
+  }
+
   async addRosterUserId(_id: ObjectId, user_id: ObjectId) {
     // Only add user if not at capacity and user not in event
     await this.isNotFull(_id);
