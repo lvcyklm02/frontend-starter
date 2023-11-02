@@ -14,22 +14,24 @@ const endMinute = ref<number>();
 const emit = defineEmits(["addEvent", "refreshEvents"]);
 
 const createEvent = async (content: string, capacity?: number, month?: number, day?: number, startHour?: number, startMinute?: number, endHour?: number, endMinute?: number) => {
-    const isNotUndefined = (inp: string | number | undefined) => {
-        return (inp !== undefined);
-    }
 
-    const inputs = [content, capacity, month, day, startHour, startMinute, endHour, endMinute];
-    if (inputs.every(isNotUndefined)) {
-        try {
-            const response = await fetchy("api/events", "POST", {
-                body: { ...inputs },
-            });
-
-        } catch (_) {
-            console.log("failed to create event");
-            return;
+    const inputs: Array<string | number> = [];
+    for (const inp in [content, capacity, month, day, startHour, startMinute, endHour, endMinute]) {
+        if (inp !== undefined) {
+            inputs.push(inp)
         }
     }
+
+    try {
+        const response = await fetchy("api/events", "POST", {
+            body: inputs,
+        });
+
+    } catch (_) {
+        console.log("failed to create event");
+        return;
+    }
+
 
     emit("refreshEvents");
     emit("addEvent");
